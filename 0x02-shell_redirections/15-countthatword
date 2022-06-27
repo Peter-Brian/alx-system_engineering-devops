@@ -1,2 +1,2 @@
 #1/bin/bash
-wc -l bin /etc/passwd
+grep --regexp="bin" --count /etc/passwd
