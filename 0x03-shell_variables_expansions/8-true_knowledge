@@ -1,3 +1,2 @@
 #!/bin/bash
-echo -e $((128 + TRUEKNOWLEDGE))
-
+export TRUEKNOWLEDGE="$TRUEKNOWLEDGE:/64+64
