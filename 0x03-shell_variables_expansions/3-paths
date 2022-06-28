@@ -1,2 +1,3 @@
 #!/bin/bash
-find $PATH | tr -s ':' '\n' | wc -l
+echo $PATH | tr -s ':' '\n' | wc -l
+
