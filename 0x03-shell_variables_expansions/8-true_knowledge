@@ -1,2 +1,2 @@
 #!/bin/bash
-export TRUEKNOWLEDGE="$TRUEKNOWLEDGE:/64+64
+echo $(($TRUEKNOWLEDGE+128))
