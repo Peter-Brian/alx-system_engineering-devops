@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Bash script that displays ls -la , cut delimeter - and list 1
+for list in *
+do
+    echo "$list" | rev | cut -d"-" -f 1 | rev
+done
