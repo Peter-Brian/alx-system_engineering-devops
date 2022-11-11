@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# a = Select all processes / u = including those of other users /
+# x = processes without controlling ttys / f = Show process hierarchy
+ps -auxf
