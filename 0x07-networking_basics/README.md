@@ -1,4 +1,3 @@
-This is a file on 0x07. Networking basics #0
 Resources
 Read or watch:
 
