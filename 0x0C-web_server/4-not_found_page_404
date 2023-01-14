@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Install nginx web server
+
+sudo apt-get update
+sudo apt install nginx -y
+sudo chown -R ubuntu /var/www/html
+echo "Ceci n'est pas une page" > /var/www/html/404.html
+replace="\n\tlocation /redirect_me {\n\t\treturn 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n\t}\n"
+replace2="\n\\terror_page 404 /404.html;\n\tlocation = /var/www/html/404.html {\n\t\tinternal;\n\t}"
+sudo sed -i "47i\ $replace$replace2" /etc/nginx/sites-available/default
+sudo service nginx restart
+sudo service nginx reload
