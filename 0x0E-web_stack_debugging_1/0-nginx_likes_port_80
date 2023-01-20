@@ -1,4 +1,35 @@
 #!/usr/bin/env bash
-# Script that change the port 8080 to 80
-sed -i "s/8080/80/" /etc/nginx/sites-enabled/default
-sudo service nginx restart
+
+# Check if Nginx is running
+sudo service nginx status
+if [ $? -ne 0 ]; then
+  echo "Nginx is not running, starting Nginx"
+  sudo service nginx start
+fi
+
+# Check if the firewall is blocking port 80
+sudo ufw status | grep -q 80/tcp
+if [ $? -ne 0 ]; then
+  echo "Port 80 is blocked, allowing traffic on port 80"
+  sudo ufw allow 80/tcp
+fi
+
+# Check if any other service is running on port 80
+sudo netstat -tuln | grep -q :80
+if [ $? -eq 0 ]; then
+  echo "Another service is running on port 80"
+else
+  # Change the port number in the Nginx configuration file
+  echo "Changing port 8080 to 80 in the Nginx config file"
+  sed -i "s/8080/80/" /etc/nginx/sites-enabled/default
+  # Check if the change was made
+  grep -q "listen 80" /etc/nginx/sites-enabled/default
+  if [ $? -eq 0 ]; then
+    echo "Successfully changed the port number"
+    # Reload Nginx
+    echo "Reloading Nginx"
+    sudo service nginx reload
+  else
+    echo "Failed to change the port number"
+  fi
+fi
