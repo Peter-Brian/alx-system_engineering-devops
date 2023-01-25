@@ -13,11 +13,11 @@ defaults
 frontend th3gr00t-tech-frontend
 	bind *:80
 	bind *:443 ssl crt /etc/haproxy/certs/studygroup226.tech.pem
-	http-request redirect scheme https unless { ssl_fc }
+	http-request redirect scheme https code 301 unless { ssl_fc }
 	http-request set-header X-Forwarded-Proto https
 	default_backend studygroup226-tech-backend
 
-backend studygroup226-tech-backend
+backend th3gr00t-tech-backend
 	balance roundrobin
 	server 453-web-01 35.243.128.200:80 check
 	server 453-web-02 3.239.120.96:80 check
