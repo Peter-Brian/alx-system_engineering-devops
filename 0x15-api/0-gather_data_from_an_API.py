@@ -1,100 +1,46 @@
 #!/usr/bin/python3
-"""
-    that, using this REST API, for a given employee ID,
-    returns information about his/her TODO list progress
-"""
+"""Gather data from API"""
 
-
-import json
-import requests
-import sys
-
-domain_name = "https://jsonplaceholder.typicode.com"
-
-
-def is_valid_json(data) -> bool:
-    """
-        check if a data is a json
-    """
-    try:
-        data.json()
-        return True
-    except Exception:
-        return False
-
-
-def get_employee_information(employee_id: int):
-    """
-        get employee informations
-    """
-    try:
-        response = requests.get(
-            url="{}/users/{}/".format(domain_name, employee_id))
-
-        if not is_valid_json(response):
-            raise ValueError("Not a valid JSON")
-
-        content = response.json()
-
-        if len(content) == 0:
-            raise ValueError("No result")
-
-        return content
-
-    except Exception as exception:
-        print(exception.args[0])
-
-
-def get_employee_tasks(employee_id):
-    """
-        get employee task list
-    """
-    try:
-        response = requests.get(
-            url="{}/users/{}/todos".format(domain_name, employee_id))
-
-        if not is_valid_json(response):
-            raise ValueError("Not a valid JSON")
-
-        content = response.json()
-
-        if len(content) == 0:
-            raise ValueError("No result")
-
-        return content
-
-    except Exception as exception:
-        print(exception.args[0])
-
-
-def get_employee_completed_tasks(task_list: json):
-    """
-        get employee completed task list
-    """
-    return [x for x in task_list if x['completed'] is True]
-
-
-def print_employee_completed_tasks(employee_id: int):
-    """
-        print employee completed task list
-    """
-    employee_infos = get_employee_information(sys.argv[1])
-    employee_tasks = get_employee_tasks(sys.argv[1])
-    employee_completed_tasks = get_employee_completed_tasks(employee_tasks)
-
-    print("Employee {} is done with tasks({}/{}):".format(
-        employee_infos.get("name"),
-        len(employee_completed_tasks),
-        len(employee_tasks))
-    )
-    for task in employee_completed_tasks:
-        print("\t {}".format(task.get("title")))
-
+from requests import get
+from sys import argv, exit
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        raise ValueError("Usage 0-gather_data_from_an_API.py <USERID>")
+    try:
+        id = argv[1]
+        is_integer = int(id)
+    except Exception:
+        exit()
 
-    print_employee_completed_tasks(sys.argv[1])
+    url = "https://jsonplaceholder.typicode.com/"
+    url_user = url + "users?id=" + id
+    url_todo = url + "todos?userId=" + id
 
+    request_user = get(url_user)
+    request_todo = get(url_todo)
+    # Connection and have an access to the json
+    try:
+        jsuser = request_user.json()
+        jstodo = request_todo.json()
+    except ValueError:
+        print("No Json")
 
+    # Assign values
+    if jsuser and jstodo:
+        EMPLOYEE_NAME = jsuser[0].get('name')
+        NUMBER_OF_DONE_TASKS = 0
+        for task in jstodo:
+            if task.get('completed'):
+                NUMBER_OF_DONE_TASKS += 1
+        TOTAL_NUMBER_OF_TASKS = len(jstodo)
+
+        # Print first line
+        print("Employee {} is done with tasks({}/{}):"
+              .format(EMPLOYEE_NAME,
+                      NUMBER_OF_DONE_TASKS,
+                      TOTAL_NUMBER_OF_TASKS))
+
+        # Second and N lines
+        for doing in jstodo:
+            TASK_TITLE = doing.get('title')
+            if doing.get('completed'):
+                print("\t {}".format(TASK_TITLE))
