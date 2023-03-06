@@ -1,0 +1,56 @@
+# Default server configuration
+#
+server {
+        listen 80 default_server;
+        add_header X-Served-By "1943-web-01";
+        listen [::]:80 default_server;
+        root /usr/share/nginx/html;
+
+        # Add index.php to the list if you are using PHP
+        index index.html index.htm;
+
+        server_name _;
+
+        location /airbnb-onepage/ {
+                 proxy_pass http://0.0.0.0:5000/airbnb-onepage/;
+        }
+                  
+        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+        #
+        #location ~ \.php$ {
+        #       include snippets/fastcgi-php.conf;
+        #
+        #       # With php7.0-cgi alone:
+        #       fastcgi_pass 127.0.0.1:9000;
+        #       # With php7.0-fpm:
+        #       fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+        #}
+
+        # deny access to .htaccess files, if Apache's document root
+        # concurs with nginx's one
+        #
+        #location ~ /\.ht {
+        #       deny all;
+        #}
+}
+
+
+# Virtual Host configuration for example.com
+#
+# You can move that to a different file under sites-available/ and symlink that
+# to sites-enabled/ to enable it.
+#
+#server {
+#       listen 80;
+#       listen [::]:80;
+#
+#       server_name example.com;
+#
+#       root /var/www/example.com;
+#       index index.html;
+#
+#       location / {
+#               try_files $uri $uri/ =404;
+#       }
+#}
+ubuntu@1943-web-01:/etc/nginx/sites-enabled$ 
